@@ -2,6 +2,7 @@ const express = require('express');
 const routeApp = express();
 
 const users = require('./users');
+const auth = require('./auth');
 
 ////////////////////// ROUTES //////////////////////////
 
@@ -11,6 +12,7 @@ routeApp.get('/', (req, res, next) => {
 })
 
 
+routeApp.use('/', auth);
 routeApp.use('/users', users);
 
 
@@ -25,7 +27,7 @@ routeApp.use((req, res, next) => {
 
 //Custom error handler
 routeApp.use((err, req, res, next) => {
-    // console.error(err);
+    console.error(err);
     if(err.status) {
         const errBody = {
             ...err,
