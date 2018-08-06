@@ -11,7 +11,7 @@ routeApp.get('/', (req, res, next) => {
 })
 
 
-// routeApp.use('/user', users);
+routeApp.use('/users', users);
 
 
 ////////////////// ERROR HANDLERS /////////////////////
