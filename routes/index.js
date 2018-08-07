@@ -3,18 +3,18 @@ const routeApp = express();
 
 const users = require('./users');
 const auth = require('./auth');
+const questions = require('./questions');
 
 ////////////////////// ROUTES //////////////////////////
 
 // sanity check
 routeApp.get('/', (req, res, next) => {
-  res.send({msg: "Server is up and running!"});
-})
-
+    res.send({ msg: 'Server is up and running!' });
+});
 
 routeApp.use('/', auth);
 routeApp.use('/users', users);
-
+routeApp.use('/questions', questions);
 
 ////////////////// ERROR HANDLERS /////////////////////
 
@@ -28,11 +28,11 @@ routeApp.use((req, res, next) => {
 //Custom error handler
 routeApp.use((err, req, res, next) => {
     console.error(err);
-    if(err.status) {
+    if (err.status) {
         const errBody = {
             ...err,
             message: err.message
-        }
+        };
         res.status(err.status).json(errBody);
     } else {
         res.status(500).json({

@@ -1,22 +1,27 @@
 'use strict';
 const mongoose = require('mongoose');
 
-const { MONGODB_URI } = require('../config');
+const { DATABASE_URL } = require('../config');
 
-const User = require('../models/user');
+const User = require('../models/users');
+const Question = require('../models/question');
 
-const seedUsers = require('../db/seed/users');
+// const seedUsers = require('../db/seed/users');
+const seedQuestions = require('../db/seed/questions');
 
-console.log(`Connecting to mongodb at ${MONGODB_URI}`);
+console.log(`Connecting to mongodb at ${DATABASE_URL}`);
 mongoose
-    .connect(MONGODB_URI)
+    .connect(DATABASE_URL)
     .then(() => {
         console.info('Dropping Database');
         return mongoose.connection.db.dropDatabase();
     })
     .then(() => {
         console.info('Seeding Database');
-        return Promise.all([User.insertMany(seedUsers), User.createIndexes()]);
+        return Promise.all([
+            Question.insertMany(seedQuestions),
+            Question.createIndexes()
+        ]);
     })
     .then(() => {
         console.info('Disconnecting');
