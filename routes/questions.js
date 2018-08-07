@@ -10,7 +10,11 @@ const Question = require('../models/question');
 
 router.get('/', (req, res, next) => {
     Question.find().then(results => {
-        res.json(results);
+        // grabs the first "question" in the list
+        const emoji = results[0];
+
+        //sends it back
+        res.json(emoji);
     });
 });
 
