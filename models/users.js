@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
     questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question', required: true }]
 });
 
+userSchema.index({ username: 1, questions: 1 }, { unique: true });
+
 userSchema.set('toObject', {
     virtuals: true,
     versionKey: false,
