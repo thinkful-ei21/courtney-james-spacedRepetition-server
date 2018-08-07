@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
     questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question', required: true }]
 });
 
+// hopefully this makes it so questions are user specific
 userSchema.index({ username: 1, questions: 1 }, { unique: true });
 
 userSchema.set('toObject', {
