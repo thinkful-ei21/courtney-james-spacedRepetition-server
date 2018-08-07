@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const name = require('emoji-name-map');
+const name = require('emoji-name-map'); //emoji package
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
@@ -24,6 +24,7 @@ app.use(
     })
 );
 
+// parses the json
 app.use(bodyParser.json());
 
 app.use(
