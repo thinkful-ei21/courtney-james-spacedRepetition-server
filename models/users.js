@@ -6,7 +6,15 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    questions: { type: Array } // questions does not ref question schema anymore
+    questions: [
+        {
+            _id: mongoose.Schema.Types.ObjectId,
+            question: String,
+            answer: String,
+            memoryStrength: Number,
+            next: Number
+        }
+    ]
 });
 
 userSchema.set('toObject', {
