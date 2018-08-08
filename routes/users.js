@@ -19,16 +19,6 @@ router.post('/', (req, res, next) => {
     let { username, password } = req.body;
     // const questions = [];
 
-    // Question.find().then(results => {
-    //     results.forEach(question => {
-    //         // console.log(question);
-    //         questions.push(question);
-    //     });
-    //     console.log(questions);
-    // });
-
-    // console.log(questions);
-
     if (!username || !password) {
         return res.status(422).json({
             code: 422,
@@ -83,7 +73,7 @@ router.post('/', (req, res, next) => {
             .then(user => {
                 Question.find()
                     .then(results => {
-                        results.forEach(question => {
+                        results.map(question => {
                             user.questions.push(question);
                         });
                         return user.save();

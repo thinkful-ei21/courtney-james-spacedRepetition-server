@@ -9,8 +9,8 @@ const userSchema = new mongoose.Schema({
     questions: [
         {
             _id: mongoose.Schema.Types.ObjectId,
-            question: String,
-            answer: String,
+            emoji: String,
+            description: String,
             memoryStrength: Number,
             next: Number
         }
