@@ -17,7 +17,7 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
     // console.log(req.body);
     let { username, password } = req.body;
-    // const questions = [];
+    let userQuestions;
 
     if (!username || !password) {
         return res.status(422).json({
@@ -60,34 +60,27 @@ router.post('/', (req, res, next) => {
     }
 
     return (
-        User.hashPassword(password)
-            .then(digest => {
+        Promise.all([Question.find(), User.hashPassword(password)])
+            .then(([questions, digest]) => {
                 return User.create({
                     username,
-                    password: digest
+                    password: digest,
+                    questions
                 });
             })
             // do a find
             // go to the question collection, grab each item and
             // put it in the questions specific to user
+
             .then(user => {
-                Question.find()
-                    .then(results => {
-                        results.map(question => {
-                            user.questions.push(question);
-                        });
-                        return user.save();
-                    })
-                    .then(result => {
-                        console.log(result);
-                        res.status(201)
-                            .location(`/users/${user.id}`)
-                            .json(user);
-                    });
-                // res.status(201)
-                //     .location(`/users/${user.id}`)
-                //     .json(user);
+                // console.log(result);
+                res.status(201)
+                    .location(`/users/${user.id}`)
+                    .json(user);
             })
+            // res.status(201)
+            //     .location(`/users/${user.id}`)
+            //     .json(user);
             .catch(err => {
                 if (err.code === 11000) {
                     return res.status(400).json({
