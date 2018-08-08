@@ -9,7 +9,6 @@ const Question = require('../models/question');
 
 router.get('/', (req, res, next) => {
     User.find()
-        // .populate('questions')
         .then(users => res.json(users))
         .catch(err => next(err));
 });
@@ -17,7 +16,6 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
     // console.log(req.body);
     let { username, password } = req.body;
-    let userQuestions;
 
     if (!username || !password) {
         return res.status(422).json({
@@ -78,9 +76,6 @@ router.post('/', (req, res, next) => {
                     .location(`/users/${user.id}`)
                     .json(user);
             })
-            // res.status(201)
-            //     .location(`/users/${user.id}`)
-            //     .json(user);
             .catch(err => {
                 if (err.code === 11000) {
                     return res.status(400).json({

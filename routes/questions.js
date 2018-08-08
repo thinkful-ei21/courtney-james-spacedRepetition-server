@@ -18,8 +18,6 @@ router.get('/', (req, res, next) => {
     User.findById(userId).then(user => {
         res.json(user.questions[0]);
     });
-
-    // res.json(req.user.questions[0]);
 });
 
 router.post('/', (req, res, next) => {
