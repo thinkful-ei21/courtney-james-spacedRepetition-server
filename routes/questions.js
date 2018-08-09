@@ -27,19 +27,69 @@ router.post('/', (req, res, next) => {
 
     User.findById(req.user.id)
         .then(user => {
-            if (user.questions[user.head].question.description === answer) {
-              let current = user.questions[user.head],
+            const head = user.head,
+                  current = user.questions[head],
                   end = user.questions[user.tail];
+            let position = 0,
+                response = '';
 
-              current.prev = end;
+            console.log(head, current);
+
+            if (current.question.description === answer) {
+              position = user.tail;
               end.next = current;
+              // current.next = null;
+              user.tail = head;
+              response = 'Correct';
+            }
+            else {
+              position = 1;
+              response = 'Incorrect';
+            }
 
-              user.head = current.next;
-              user.tail = end.next;
+            user.head = current.next;
 
-              current.prev = null;
-              end.next = null;
+            let temp = current;
+            for (let i=0; i < position; i++) {
+              let index = temp.next;
 
+              temp = user.questions[index];
+            }
+
+
+            current.next = temp.next;
+            temp.next = head;
+
+
+
+            return user.save();
+
+
+
+
+
+
+              //THIRD ATTEMPT
+              // current.prev = end;
+              // end.next = current;
+              //
+              // user.head = current.next;
+              // user.tail = end.next;
+              //
+              // user.questions[user.head].prev = null;
+              // user.questions[user.tail].next = null;
+
+              //SECOND ATTEMPT
+              // current.prev = end;
+              // end.next = current;
+              //
+              // user.head = current.next;
+              // user.tail = end.next;
+              //
+              // current.prev = null;
+              // end.next = null;
+
+              //FIRST ATTEMPT
               //reseting tail to be current question that was answer (putting question at back of the list)
               // current.prev = end;
               // end.next = current;
@@ -52,11 +102,7 @@ router.post('/', (req, res, next) => {
 
 
               // return res.send({msg: "Correct"});
-              return user.save();
-            }
-            else {
-              return res.send({msg: "Incorrect"});
-            }
+
             // const firstItem = user.questions.shift();
             // user.questions.push(firstItem);
             // return user.save();

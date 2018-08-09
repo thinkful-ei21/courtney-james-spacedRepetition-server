@@ -59,8 +59,7 @@ router.post('/', (req, res, next) => {
     const questions = Question.find().then(questions => {
       return questions.map((question, index) => ({
         question,
-        next: index === questions.length - 1 ? null : index + 1,
-        prev: index === 0 ? null : index - 1
+        next: index === questions.length - 1 ? null : index + 1
       }));
     })
 
