@@ -56,8 +56,16 @@ router.post('/', (req, res, next) => {
         });
     }
 
+    const questions = Question.find().then(questions => {
+      return questions.map((question, index) => ({
+        question,
+        next: index === questions.length - 1 ? null : index + 1,
+        prev: index === 0 ? null : index - 1
+      }));
+    })
+
     return (
-        Promise.all([Question.find(), User.hashPassword(password)])
+        Promise.all([questions, User.hashPassword(password)])
             .then(([questions, digest]) => {
                 return User.create({
                     username,
@@ -65,10 +73,6 @@ router.post('/', (req, res, next) => {
                     questions
                 });
             })
-            // do a find
-            // go to the question collection, grab each item and
-            // put it in the questions specific to user
-
             .then(user => {
                 res.status(201)
                     .location(`/users/${user.id}`)
