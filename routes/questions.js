@@ -15,7 +15,7 @@ router.get('/', (req, res, next) => {
     const userId = req.user.id;
 
     User.findById(userId).then(user => {
-        res.json(user.questions[0]);
+        res.json(user.questions[user.head]);
     });
 });
 
@@ -27,8 +27,32 @@ router.post('/', (req, res, next) => {
 
     User.findById(req.user.id)
         .then(user => {
-            if (user.questions[0].description === answer) {
-              return res.send({msg: "Correct"});
+            if (user.questions[user.head].question.description === answer) {
+              let current = user.questions[user.head],
+                  end = user.questions[user.tail];
+
+              current.prev = end;
+              end.next = current;
+
+              user.head = current.next;
+              user.tail = end.next;
+
+              current.prev = null;
+              end.next = null;
+
+              //reseting tail to be current question that was answer (putting question at back of the list)
+              // current.prev = end;
+              // end.next = current;
+              // user.tail = user.head;
+
+              //reseting head to next question
+              // user.head = current.next; // same as:  user.head = user.head + 1
+              // current.prev = null;
+              // end.next = null;
+
+
+              // return res.send({msg: "Correct"});
+              return user.save();
             }
             else {
               return res.send({msg: "Incorrect"});
@@ -37,7 +61,7 @@ router.post('/', (req, res, next) => {
             // user.questions.push(firstItem);
             // return user.save();
         })
-        // .then(user => res.json(user.questions[0].description));
+        .then(user => res.json(user))
         .catch(err => next(err));
 });
 
