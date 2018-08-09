@@ -2,11 +2,17 @@
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const questionSchema = require('./question').schema;
 
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    questions: { type: Array },
+    questions: [
+      {
+        question: {type: mongoose.Schema.Types.ObjectId, ref: 'Question'},
+        next: { type: Number }
+      }
+    ],
     head: { type: Number, default: 0},
     tail: { type: Number, default: 4}
 });

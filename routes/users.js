@@ -5,10 +5,11 @@ const mongoose = require('mongoose');
 const router = express.Router();
 
 const User = require('../models/users');
-const Question = require('../models/question');
+const Question = require('../models/question').model;
 
 router.get('/', (req, res, next) => {
     User.find()
+        .populate('questions')
         .then(users => res.json(users))
         .catch(err => next(err));
 });
@@ -56,21 +57,55 @@ router.post('/', (req, res, next) => {
         });
     }
 
-    const questions = Question.find().then(questions => {
-      return questions.map((question, index) => ({
-        question,
-        next: index === questions.length - 1 ? null : index + 1
-      }));
-    })
+    // const questionPromise = Question.find().then(questions => {
+    //   // console.log(`questions: ${questions}`);
+    //   return questions.map((question, index) => ({
+    //     ...question,
+    //     next: index === questions.length - 1 ? null : index + 1
+    //   }));
+    // })
+
+    let resolvedQuestions;
 
     return (
-        Promise.all([questions, User.hashPassword(password)])
-            .then(([questions, digest]) => {
-                return User.create({
-                    username,
-                    password: digest,
-                    questions
-                });
+        // Promise.all([questionPromise, User.hashPassword(password)])
+        //     .then((values) => {
+        //       console.log(`values: ${JSON.stringify(values, null, 4)}`);
+        //         resolvedQuestions = values[0];
+        //
+        //         return User.create({
+        //             username,
+        //             password: values[1]
+        //             // questions
+        //         });
+        //     })
+
+        Question.find()
+            .then(questions => {
+              resolvedQuestions = questions.map((question, index) => ({
+                // _id: question._id,
+                // emoji: question.emoji,
+                // description: question.description,
+                question,
+                next: index === questions.length - 1 ? null : index + 1
+              }));
+              console.log(`resolvedQs: ${JSON.stringify(resolvedQuestions, null, 4)}`);
+
+              return;
+            })
+            .then( () => {
+              return User.hashPassword(password);
+            })
+            .then(digest => {
+              return User.create({
+                  username,
+                  password: digest
+              });
+            })
+            .then(user => {
+              user.questions = resolvedQuestions;
+              // console.log(`resolvedQs: ${JSON.stringify(resolvedQuestions, null, 4)}`);
+              return user.save();
             })
             .then(user => {
                 res.status(201)

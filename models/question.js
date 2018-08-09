@@ -13,8 +13,11 @@ questionSchema.set('toObject', {
     versionKey: false,
     transform: (doc, ret) => {
         delete ret._id;
-        delete ret.password;
+        // delete ret.password;
     }
 });
 
-module.exports = mongoose.model('Question', questionSchema);
+module.exports = {
+  model: mongoose.model('Question', questionSchema),
+  schema: questionSchema
+};
