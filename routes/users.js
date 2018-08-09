@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const router = express.Router();
 
 const User = require('../models/users');
-const Question = require('../models/question').model;
+const Question = require('../models/question');
 
 
 router.get('/', (req, res, next) => {
@@ -68,8 +68,6 @@ router.post('/', (req, res, next) => {
                 question,
                 next: index === questions.length - 1 ? null : index + 1
               }));
-              console.log(`resolvedQs: ${JSON.stringify(resolvedQuestions, null, 4)}`);
-
               return;
             })
             .then( () => {

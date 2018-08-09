@@ -16,7 +16,4 @@ questionSchema.set('toObject', {
     }
 });
 
-module.exports = {
-  model: mongoose.model('Question', questionSchema),
-  schema: questionSchema
-};
+module.exports = mongoose.model('Question', questionSchema);

@@ -7,7 +7,7 @@ const passport = require('passport');
 const router = express.Router();
 
 const User = require('../models/users');
-const Question = require('../models/question').model;
+const Question = require('../models/question');
 
 
 router.use('/', passport.authenticate('jwt', { session: false, failWithError: true }));
@@ -32,7 +32,6 @@ router.post('/', (req, res, next) => {
     User.findById(req.user.id)
         .populate('questions.question')
         .then(user => {
-          console.log(user);
 
             let current = user.head,
                 tail = user.tail,
